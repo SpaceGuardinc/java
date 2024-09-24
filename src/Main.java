@@ -1,5 +1,29 @@
 import java.util.*;
 
+class School {
+    private int id;
+    private String name;
+    private int count;
+
+    public School(int id, String name, int count) {
+        this.id = id;
+        this.name = name;
+        this.count = count;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    @Override
+    public String toString() {
+        return "Школы " + "\n" +
+                "ID: " + id + "\n" +
+                "Название: " + name + "\n" +
+                "Количество учащихся: " + count;
+    }
+}
+
 public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -9,14 +33,13 @@ public class Main {
             try {
                 System.out.println("Введите количество школ");
                 numSchools = scanner.nextInt();
-                if (numSchools == 0){
+                if (numSchools <= 0) {
                     System.out.println("Число должно быть больше 0");
-                }
-                else break;
+                } else break;
             } catch (Exception e) {
                 System.out.println("Вы ввели не число");
+                scanner.nextLine(); // Очищаем буфер
             }
-            scanner.nextLine();
         }
 
         List<School> schoolList = new ArrayList<>();
@@ -29,8 +52,6 @@ public class Main {
 
             System.out.println("Введите ID:");
             id = scanner.nextInt();
-
-            // Очищаем буфер перед вводом строки
             scanner.nextLine();
 
             System.out.println("Введите название:");
@@ -42,13 +63,27 @@ public class Main {
             schoolList.add(new School(id, name, count));
         }
 
-        for (School school : schoolList) {
-            System.out.println(school);
+        schoolList.forEach(System.out::println);
+//        schoolList.forEach(school -> System.out.println(school));
+
+        // Находим максимальное количество студентов
+        int maxStudentsCount = schoolList.stream()
+                .mapToInt(School::getCount)
+                .max()
+                .orElse(-1);
+
+        // Находим последнюю школу с максимальным количеством студентов
+        School lastMaxSchool = schoolList.stream()
+                .filter(school -> school.getCount() == maxStudentsCount)
+                .reduce((first, second) -> second)
+                .orElse(null);
+
+        if (lastMaxSchool != null) {
+            int lastIndex = schoolList.lastIndexOf(lastMaxSchool);
+            System.out.println("Школа с максимальным количеством учеников: " + lastMaxSchool);
+            System.out.println("Индекс последней школы: " + lastIndex);
+        } else {
+            System.out.println("Школ с максимальным количеством учеников не найдено.");
         }
-
-        int maxStudents = School.getMaxStudentCount(schoolList);
-
-        System.out.println("Максимальное кол-во студентов " + maxStudents);
-
     }
 }
