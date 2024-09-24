@@ -1,84 +1,54 @@
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-
-class Workers {
-    String FIO;
-    String placeWork;
-
-    public Workers(String FIO, String placeWork) {
-        this.FIO = FIO;
-        this.placeWork = placeWork;
-    }
-
-    @Override
-    public String toString() {
-        return "Workers{" +
-                "FIO='" + FIO + '\'' +
-                ", place work='" + placeWork + '\'' +
-                '}';
-    }
-}
-
-class Worker extends Workers {
-    int rank;
-
-    public Worker(String FIO, String placeWork, int rank) {
-        super(FIO, placeWork);
-        this.rank = rank;
-    }
-
-    @Override
-    public String toString() {
-        return "Worker{" +
-                "rank=" + rank +
-                '}';
-    }
-}
-
-class ScienceWorker extends Worker {
-    int numberPublic;
-
-    public ScienceWorker(String FIO, String placeWork, int rank, int numberPublic) {
-        super(FIO, placeWork, rank);
-        this.numberPublic = numberPublic;
-    }
-
-    @Override
-    public String toString() {
-        return "ScienceWorker{" +
-                "FIO='" + FIO + '\'' +
-                ", place work='" + placeWork + '\'' +
-                ", rank=" + rank +
-                ", numberPublic=" + numberPublic +
-                '}';
-    }
-}
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
-        System.out.println("Введите количество сотрудников");
-        int countObjects = input.nextInt();
-        List<Workers> allWorkers = new ArrayList<>();
-        input.nextLine();
-        for (int iterator = 0; iterator < countObjects; iterator++) {
-            System.out.println("Введите ФИО");
-            String FIO = input.next();
-            System.out.println("Введите место работы");
-            String placeWork = input.next();
-            System.out.println("Введите степень сотрудника");
-            int rank = input.nextInt();
-            System.out.println("Введите кол-во публикаций (для научного работника)");
-            int countPublics = input.nextInt();
+        Scanner scanner = new Scanner(System.in);
+        int numSchools = 0;
 
-            ScienceWorker scienceWorker = new ScienceWorker(FIO, placeWork, rank, countPublics);
-            allWorkers.add(scienceWorker);
+        while (true) {
+            try {
+                System.out.println("Введите количество школ");
+                numSchools = scanner.nextInt();
+                if (numSchools == 0){
+                    System.out.println("Число должно быть больше 0");
+                }
+                else break;
+            } catch (Exception e) {
+                System.out.println("Вы ввели не число");
+            }
+            scanner.nextLine();
         }
 
-        System.out.println("Перечень всех сотрудников: ");
-        for (Workers worker : allWorkers) {
-            System.out.println(worker);
+        List<School> schoolList = new ArrayList<>();
+
+        for (int iterator = 0; iterator < numSchools; iterator++) {
+            System.out.println("Информация о школе № " + (1 + iterator) + ":");
+            int id;
+            String name;
+            int count;
+
+            System.out.println("Введите ID:");
+            id = scanner.nextInt();
+
+            // Очищаем буфер перед вводом строки
+            scanner.nextLine();
+
+            System.out.println("Введите название:");
+            name = scanner.nextLine();
+
+            System.out.println("Введите количество студентов:");
+            count = scanner.nextInt();
+
+            schoolList.add(new School(id, name, count));
         }
+
+        for (School school : schoolList) {
+            System.out.println(school);
+        }
+
+        int maxStudents = School.getMaxStudentCount(schoolList);
+
+        System.out.println("Максимальное кол-во студентов " + maxStudents);
+
     }
 }
