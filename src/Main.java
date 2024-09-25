@@ -24,7 +24,29 @@ class School {
     }
 }
 
+
+
+
 public class Main {
+
+    public static int getMaxSchool(List<School> schoolList) {
+            // Находим максимальное количество студентов
+            return schoolList.stream()
+                    .mapToInt(School::getCount)
+                    .max()
+                    .orElse(-1);
+    }
+
+
+
+    public static School getMaxSchoolIfMoreOne(List<School> schoolList) {
+        int maxStudentsCount = getMaxSchool(schoolList);
+        return schoolList.stream()
+                .filter(school -> school.getCount() == maxStudentsCount)
+                .toList()
+                .getLast();
+    }
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         int numSchools = 0;
@@ -66,24 +88,21 @@ public class Main {
         schoolList.forEach(System.out::println);
 //        schoolList.forEach(school -> System.out.println(school));
 
-        // Находим максимальное количество студентов
-        int maxStudentsCount = schoolList.stream()
-                .mapToInt(School::getCount)
-                .max()
-                .orElse(-1);
-
         // Находим последнюю школу с максимальным количеством студентов
-        School lastMaxSchool = schoolList.stream()
-                .filter(school -> school.getCount() == maxStudentsCount)
-                .reduce((first, second) -> second)
-                .orElse(null);
 
-        if (lastMaxSchool != null) {
-            int lastIndex = schoolList.lastIndexOf(lastMaxSchool);
-            System.out.println("Школа с максимальным количеством учеников: " + lastMaxSchool);
+
+
+        if (getMaxSchoolIfMoreOne(schoolList) != null) {
+            int lastIndex = schoolList.lastIndexOf(getMaxSchoolIfMoreOne(schoolList));
+            System.out.println("Школа с максимальным количеством учеников: " + getMaxSchool(schoolList));
             System.out.println("Индекс последней школы: " + lastIndex);
         } else {
             System.out.println("Школ с максимальным количеством учеников не найдено.");
         }
+
+        if (schoolList.size() < 2){
+            System.out.println();
+        }
+
     }
 }
