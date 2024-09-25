@@ -26,17 +26,15 @@ class School {
 
 
 
-
 public class Main {
 
     public static int getMaxSchool(List<School> schoolList) {
-            // Находим максимальное количество студентов
             return schoolList.stream()
+                    //.mapToInt(school -> school.getCount())
                     .mapToInt(School::getCount)
                     .max()
                     .orElse(-1);
     }
-
 
 
     public static School getMaxSchoolIfMoreOne(List<School> schoolList) {
@@ -88,21 +86,15 @@ public class Main {
         schoolList.forEach(System.out::println);
 //        schoolList.forEach(school -> System.out.println(school));
 
-        // Находим последнюю школу с максимальным количеством студентов
 
-
-
-        if (getMaxSchoolIfMoreOne(schoolList) != null) {
+        if (getMaxSchoolIfMoreOne(schoolList) != null && schoolList.size() > 1) {
             int lastIndex = schoolList.lastIndexOf(getMaxSchoolIfMoreOne(schoolList));
             System.out.println("Школа с максимальным количеством учеников: " + getMaxSchool(schoolList));
             System.out.println("Индекс последней школы: " + lastIndex);
+        } else if (schoolList.size() == 1){
+            System.out.println("Массив единичный, в этой школе " + getMaxSchool(schoolList) + " учеников");
         } else {
             System.out.println("Школ с максимальным количеством учеников не найдено.");
         }
-
-        if (schoolList.size() < 2){
-            System.out.println();
-        }
-
     }
 }
