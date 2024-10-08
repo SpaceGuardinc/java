@@ -52,11 +52,9 @@ public class Main {
             researchers[i] = new Researcher(name, workplace, publications);
         }
 
-        // Ищем минимальное количество публикаций
         int minPublications = researchers[0].getPublications();
         boolean allSame = true;
 
-        // Проверка на наличие одинакового количества публикаций у всех сотрудников
         for (int i = 1; i < researchers.length; i++) {
             if (researchers[i].getPublications() != minPublications) {
                 allSame = false;
@@ -69,7 +67,6 @@ public class Main {
         if (allSame) {
             System.out.println("Минимальное количество публикаций не найдено, так как все имеют одинаковое количество.");
         } else {
-            // Если все не одинаковые, найти первого с минимальным количеством публикаций
             for (int i = 0; i < researchers.length; i++) {
                 if (researchers[i].getPublications() == minPublications) {
                     System.out.println("Сотрудник с минимальным количеством публикаций: " + researchers[i]);
