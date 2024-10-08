@@ -13,21 +13,13 @@ class Researcher {
         this.publications = publications;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getWorkplace() {
-        return workplace;
-    }
-
     public int getPublications() {
         return publications;
     }
 
+    @Override
     public String toString() {
-        return "Researcher {" + "name:" + name + ", workplace:" + workplace +
-                ", publications:" + publications + "}";
+        return "Имя: " + name + ", Место работы: " + workplace + ", Публикаций: " + publications;
     }
 }
 
@@ -60,22 +52,31 @@ public class Main {
             researchers[i] = new Researcher(name, workplace, publications);
         }
 
-        if (researchers.length == 0) {
-            System.out.println("Нет научных сотрудников для анализа.");
-            return;
-        }
-
+        // Ищем минимальное количество публикаций
         int minPublications = researchers[0].getPublications();
-        int minIndex = 0;
+        boolean allSame = true;
 
+        // Проверка на наличие одинакового количества публикаций у всех сотрудников
         for (int i = 1; i < researchers.length; i++) {
+            if (researchers[i].getPublications() != minPublications) {
+                allSame = false;
+            }
             if (researchers[i].getPublications() < minPublications) {
                 minPublications = researchers[i].getPublications();
-                minIndex = i;
             }
         }
 
-        System.out.println("Научный работник с минимальным количеством публикаций: " + researchers[minIndex]);
-        System.out.println("Index: " + minIndex);
+        if (allSame) {
+            System.out.println("Минимальное количество публикаций не найдено, так как все имеют одинаковое количество.");
+        } else {
+            // Если все не одинаковые, найти первого с минимальным количеством публикаций
+            for (int i = 0; i < researchers.length; i++) {
+                if (researchers[i].getPublications() == minPublications) {
+                    System.out.println("Сотрудник с минимальным количеством публикаций: " + researchers[i]);
+                    System.out.println("Индекс: " + i);
+                    break;
+                }
+            }
+        }
     }
 }
