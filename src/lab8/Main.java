@@ -4,7 +4,6 @@ import java.awt.*;
 import java.util.*;
 import javax.swing.*;
 
-import static lab8.JFrameGUI.createGUI;
 
 class JFrameGUI {
     public static void createGUI() {
