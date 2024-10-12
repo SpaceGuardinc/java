@@ -13,7 +13,8 @@ class JFrameGUI {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
 
-        JLabel label = new JLabel("Выберите: сдал или не сдал и введите количество баллов", SwingConstants.CENTER);
+        JLabel label = new JLabel("Выберите: сдал или не сдал и введите количество баллов",
+                SwingConstants.CENTER);
         topPanel.add(label);
 
         String[] items = {"Сдал", "Не сдал"};
