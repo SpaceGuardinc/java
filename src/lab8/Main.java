@@ -45,7 +45,6 @@ class JFrameGUI {
                 if (number > 100) {
                     resultLabel.setText("Введите число меньше 100.");
                 } else {
-                    // Проверяем выбранный вариант и выводим результат
                     if (Objects.equals(selectedItem, "Сдал")) {
                         resultLabel.setText("Оценка за экзамен: отлично");
                     } else if (Objects.equals(selectedItem, "Не сдал") && number >= 85 && number <= 100) {
