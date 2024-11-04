@@ -27,6 +27,13 @@ class JFrameGUI {
         JTextField textField = new JTextField(10);
         topPanel.add(textField);
 
+        JLabel sumFieldLabel = new JLabel("Введите стипендию без надбавки");
+        topPanel.add(sumFieldLabel);
+
+        JTextField sumTextField = new JTextField(10);
+        topPanel.add(sumTextField);
+
+
         JLabel resultLabel = new JLabel();
         topPanel.add(resultLabel);
 
@@ -34,30 +41,29 @@ class JFrameGUI {
         button.addActionListener(e -> {
             String selectedItem = (String) comboBox.getSelectedItem();
             String inputText = textField.getText().trim();
+            String sumInputText = sumTextField.getText().trim();
 
             if (inputText.isEmpty()) {
                 resultLabel.setText("Введите количество баллов за научную работу.");
                 return;
             }
 
-            try {
-                int number = Integer.parseInt(inputText);
+            if (sumInputText.isEmpty()){
+                resultLabel.setText("Введите сумму степендии студента.");
+                return;
+            }
 
-                if (number > 100) {
-                    resultLabel.setText("Введите число меньше 100.");
-                } else {
-                    if (Objects.equals(selectedItem, "Отлично")) {
-                        resultLabel.setText("Начислено будет: 50%");
-                    } else if (Objects.equals(selectedItem, "Не отлично") && number >= 13) {
-                        resultLabel.setText("Начислено будет: 50%");
-                    } else if (Objects.equals(selectedItem, "Не отлично") && number >= 8 && number <= 13) {
-                        resultLabel.setText("Начислено будет: 35%");
-                    } else {
-                        resultLabel.setText("Не предоставляется");
-                    }
-                }
-            } catch (NumberFormatException ex) {
-                resultLabel.setText("Введите корректное число.");
+            int number = Integer.parseInt(inputText);
+            float sumNumber = Float.parseFloat(sumInputText);
+
+            if (Objects.equals(selectedItem, "Отлично")) {
+                resultLabel.setText("Начислено будет: 50%"  + " " + sumNumber * 0.5);
+            } else if (Objects.equals(selectedItem, "Не отлично") && number >= 13) {
+                resultLabel.setText("Начислено будет: 50%" + " " + sumNumber * 0.5);
+            } else if (Objects.equals(selectedItem, "Не отлично") && number >= 8 && number <= 13) {
+                resultLabel.setText("Начислено будет: 35%" + " " + sumNumber * 0.35);
+            } else {
+                resultLabel.setText("Не предоставляется");
             }
         });
 
