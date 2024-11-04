@@ -1,78 +1,109 @@
 package lab9;
 
 import java.awt.*;
-import java.io.Serializable;
-import java.util.*;
+import java.io.*;
+import java.util.ArrayList;
 import javax.swing.*;
-import javax.swing.plaf.PanelUI;
 
-class historyMoments implements Serializable{
+class HistoryMoment implements Serializable {
     String nameHistoryMoment;
     Integer yearStart;
     Integer yearEnd;
 
-    public historyMoments(String nameHistoryMoment, Integer yearStart, Integer yearEnd){
+    public HistoryMoment(String nameHistoryMoment, Integer yearStart, Integer yearEnd) {
         this.nameHistoryMoment = nameHistoryMoment;
         this.yearStart = yearStart;
         this.yearEnd = yearEnd;
     }
 
-    public String getNameHistoryMoment() {
-        return nameHistoryMoment;
-    }
-
-    public Integer getYearStart(){
-        return yearStart;
-    }
-
-    public Integer getYearEnd(){
-        return yearEnd;
-    }
-
-    public void setNameHistoryMoment(String nameHistoryMoment) {
-        this.nameHistoryMoment = nameHistoryMoment;
-    }
-
-    public void setYearStart(Integer yearStart) {
-        this.yearStart = yearStart;
-    }
-
-    public void setYearEnd(Integer yearEnd) {
-        this.yearEnd = yearEnd;
+    public String toString() {
+        return nameHistoryMoment + " год начала: " + yearStart + " год окончания: " + yearEnd;
     }
 }
 
-class jFrameGUI{
-    public static void createGUI(){
+class JFrameGUI {
+    private static final String FILE_NAME = "historyMoments.dat";
+    private static ArrayList<HistoryMoment> historyList = new ArrayList<>();
+    private static JTextArea displayArea;
+
+    public static void createGUI() {
         JFrame jFrame = new JFrame("Lab 9");
         JPanel jPanel = new JPanel();
         jPanel.setLayout(new BoxLayout(jPanel, BoxLayout.Y_AXIS));
 
         JLabel jLabelNameHistoryMoment = new JLabel("Введите название исторического события");
-        jPanel.add(jLabelNameHistoryMoment);
-        JTextField jTextFieldNameHistoryMoment = new JTextField( 5);
-        jPanel.add(jTextFieldNameHistoryMoment);
+        JTextField jTextFieldNameHistoryMoment = new JTextField(5);
 
         JLabel jLabelYearStart = new JLabel("Введите год начала исторического события");
-        jPanel.add(jLabelYearStart);
-        JTextField jTextFieldYearStart = new JTextField( 5);
-        jPanel.add(jTextFieldYearStart);
+        JTextField jTextFieldYearStart = new JTextField(5);
 
         JLabel jLabelYearEnd = new JLabel("Введите год окончания исторического события");
-        jPanel.add(jLabelYearEnd);
-        JTextField jTextFieldYearEnd = new JTextField( 5);
-        jPanel.add(jTextFieldYearEnd);
+        JTextField jTextFieldYearEnd = new JTextField(5);
 
-        jFrame.getContentPane().add(jPanel, BorderLayout.NORTH);
+        JButton addButton = new JButton("Добавить событие");
+        JButton saveButton = new JButton("Сохранить в файл");
+        JButton loadButton = new JButton("Загрузить из файла");
+
+        displayArea = new JTextArea(10, 30);
+        displayArea.setEditable(false);
+        JScrollPane scrollPane = new JScrollPane(displayArea);
+
+        jPanel.add(jLabelNameHistoryMoment);
+        jPanel.add(jTextFieldNameHistoryMoment);
+        jPanel.add(jLabelYearStart);
+        jPanel.add(jTextFieldYearStart);
+        jPanel.add(jLabelYearEnd);
+        jPanel.add(jTextFieldYearEnd);
+        jPanel.add(addButton);
+        jPanel.add(saveButton);
+        jPanel.add(loadButton);
+        jPanel.add(scrollPane);
+
+        addButton.addActionListener(e -> {
+            String name = jTextFieldNameHistoryMoment.getText();
+            int startYear = Integer.parseInt(jTextFieldYearStart.getText());
+            int endYear = Integer.parseInt(jTextFieldYearEnd.getText());
+            HistoryMoment moment = new HistoryMoment(name, startYear, endYear);
+            historyList.add(moment);
+            displayArea.append(moment + "\n");
+        });
+
+        saveButton.addActionListener(e -> saveHistoryMoments());
+
+        loadButton.addActionListener(e -> loadHistoryMoments());
+
+        jFrame.getContentPane().add(jPanel, BorderLayout.CENTER);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        jFrame.setPreferredSize(new Dimension(640, 360));
+        jFrame.setPreferredSize(new Dimension(640, 480));
         jFrame.pack();
         jFrame.setVisible(true);
+    }
+
+    private static void saveHistoryMoments() {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_NAME))) {
+            oos.writeObject(historyList);
+            JOptionPane.showMessageDialog(null, "Данные успешно сохранены.");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(null, "Ошибка при сохранении данных: " + e.getMessage());
+        }
+    }
+
+    private static void loadHistoryMoments() {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_NAME))) {
+            historyList = (ArrayList<HistoryMoment>) ois.readObject();
+            displayArea.setText("");
+            for (HistoryMoment moment : historyList) {
+                displayArea.append(moment + "\n");
+            }
+            JOptionPane.showMessageDialog(null, "Данные успешно загружены.");
+        } catch (IOException | ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null, "Ошибка при загрузке данных: " + e.getMessage());
+        }
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(jFrameGUI::createGUI);
+        SwingUtilities.invokeLater(JFrameGUI::createGUI);
     }
 }
